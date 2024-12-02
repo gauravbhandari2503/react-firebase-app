@@ -18,8 +18,11 @@ const Header = () => {
           <Link to="/" className="hover:underline">
             Home
           </Link>
-          <Link to="/add" className="hover:underline">
-            Add Product
+          <Link to="/books" className="hover:underline">
+            Books
+          </Link>
+          <Link to="/products" className="hover:underline">
+            Products
           </Link>
           <button
             onClick={handleLogout}

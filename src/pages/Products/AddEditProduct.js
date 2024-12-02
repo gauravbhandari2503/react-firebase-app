@@ -1,34 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { db } from "../firebase";
-import { collection, doc, setDoc, getDoc } from "firebase/firestore";
+import useFirestore from "../../hooks/useFirestore";
 
 const AddEditProduct = () => {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const navigate = useNavigate();
   const { id } = useParams();
+  const {data, saveData, loading, error} = useFirestore("products", id);
 
   useEffect(() => {
-    if (id) {
-      const fetchProduct = async () => {
-        const docRef = doc(db, "products", id);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          setName(data.name);
-          setPrice(data.price);
-        }
-      };
-      fetchProduct();
+    if (data) {
+      setName(data.name);
+      setPrice(data.price);
     }
-  }, [id]);
+  }, [data]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const productRef = id ? doc(db, "products", id) : doc(collection(db, "products"));
-    await setDoc(productRef, { name, price });
-    navigate("/");
+    await saveData({ name, price });
+    navigate("/products");
   };
 
   return (
